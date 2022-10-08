@@ -1,1 +1,15 @@
-{"4":{"NftMarketplace":["0x495cd12d23c4CEdfbefB112cdd08cd9f654D95C1"]},"31337":{"NftMarketplace":["0x5FbDB2315678afecb367f032d93F642f64180aa3"]}}
+{
+
+  "5" : {
+
+    "Xchainge": ["0x925f113d5983462d9c5365f5e5da2652d1ec8d42"]
+
+  },
+  "80001" : {
+    "Xchainge" : ["0x2f19c27de68b162989b1ca9a742ce493607c17c4"]
+  },
+
+  "31337" : {
+    "Xchainge" : [""]
+  }
+}

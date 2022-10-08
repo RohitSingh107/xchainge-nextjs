@@ -7,7 +7,7 @@ export default function Header() {
         <nav className="p-5 border-b-2 flex flex-row justify-between items-center">
             <Link href="/">
                 <a>
-                    <h1 className="py-4 px-4 font-bold text-3xl">NFT Marketplace</h1>
+                    <h1 className="py-4 px-4 font-bold text-3xl">Xchainge Protocol</h1>
                 </a>
             </Link>
             <div className="flex flex-row items-center">
