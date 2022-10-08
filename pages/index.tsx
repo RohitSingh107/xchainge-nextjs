@@ -58,7 +58,7 @@ const Home: NextPage = () => {
                 price={price}
                 nftAddress={nftAddress}
                 tokenId={tokenId}
-                nftMarketplaceAddress={xchaingeAddress!}
+                xchaingeAddress={xchaingeAddress!}
                 seller={seller}
                 key={`${nftAddress}${tokenId}`}
               />

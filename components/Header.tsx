@@ -15,9 +15,9 @@ export default function Header() {
                     {/* Home is going to be the recent listings page */}
                     <a className="mr-4 p-6">Home</a>
                 </Link>
-                <Link href="/sell-nft">
+                <Link href="/sell-page">
                     {/* This is going to include cancel listings, update listings, and withdraw proceeds */}
-                    <a className="mr-4 p-6">Sell NFTs</a>
+                    <a className="mr-4 p-6">List Item</a>
                 </Link>
                 <ConnectButton moralisAuth={false} />
             </div>

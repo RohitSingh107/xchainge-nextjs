@@ -14,7 +14,7 @@ interface NFTBoxProps {
     price?: number
     nftAddress: string
     tokenId: string
-    nftMarketplaceAddress: string
+    xchaingeAddress: string
     seller?: string
 }
 
@@ -35,10 +35,10 @@ const NFTBox: NextPage<NFTBoxProps> = ({
     price,
     nftAddress,
     tokenId,
-    nftMarketplaceAddress,
+    xchaingeAddress,
     seller,
 }: NFTBoxProps) => {
-    console.log(nftMarketplaceAddress)
+    console.log(xchaingeAddress)
     const { chainId, isWeb3Enabled, account } = useMoralis()
     const [imageURI, setImageURI] = useState<string | undefined>()
     const [tokenName, setTokenName] = useState<string | undefined>()
@@ -48,7 +48,7 @@ const NFTBox: NextPage<NFTBoxProps> = ({
     const hideModal = () => setShowModal(false)
     const isListed = seller !== undefined
     console.log("marketplace")
-    console.log(nftMarketplaceAddress)
+    console.log(xchaingeAddress)
 
     const dispatch = useNotification()
 
@@ -63,7 +63,7 @@ const NFTBox: NextPage<NFTBoxProps> = ({
 
     const { runContractFunction: buyItem, error: buyError } = useWeb3Contract({
         abi: xchaingeAbi,
-        contractAddress: nftMarketplaceAddress,
+        contractAddress: xchaingeAddress,
         functionName: "buyItem",
         msgValue: price,
         params: {
@@ -123,7 +123,7 @@ const NFTBox: NextPage<NFTBoxProps> = ({
         if (isOwnedByUser) {
             setShowModal(true)
         } else {
-            console.log(nftMarketplaceAddress)
+            console.log(xchaingeAddress)
             await buyItem({
                 onSuccess: () => handleBuyItemSuccess(),
                 onError: (error) => {
@@ -158,7 +158,7 @@ const NFTBox: NextPage<NFTBoxProps> = ({
                 nftAddress={nftAddress}
                 tokenId={tokenId}
                 onClose={hideModal}
-                nftMarketplaceAddress={nftMarketplaceAddress}
+                nftMarketplaceAddress={xchaingeAddress}
             />
             <UpdateListingModal
                 isVisible={showModal && isListed}
@@ -167,7 +167,7 @@ const NFTBox: NextPage<NFTBoxProps> = ({
                 nftAddress={nftAddress}
                 tokenId={tokenId}
                 onClose={hideModal}
-                nftMarketplaceAddress={nftMarketplaceAddress}
+                nftMarketplaceAddress={xchaingeAddress}
                 currentPrice={price}
             />
             <Card title={tokenName} description={tokenDescription} onClick={handleCardClick}>
