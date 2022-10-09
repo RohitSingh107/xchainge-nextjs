@@ -1,7 +1,7 @@
 import type { NextPage } from "next"
 import { Form, Button, useNotification } from "web3uikit"
 import { Upload } from "@web3uikit/core"
-
+import { storeNFT } from "../utils/uploadToNFTstorage"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import xchaingeAbi from "../constants/Xchainge.json"
 import xchaingeTokenAbi from "../constants/XchaingeToken.json"
@@ -26,6 +26,7 @@ const SellNft: NextPage = () => {
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     // Should point to correct address
     const xchaingeAddress = (networkMapping as NetworkConfigMap)[chainString].Xchainge[0]
+    const xchaingeTokenAddress = "0x204DA0Cb23ee397C8F4338EE1306d3F9D2d30063"
     const [proceeds, setProceeds] = useState("0")
 
     const dispatch = useNotification()
@@ -72,6 +73,8 @@ const SellNft: NextPage = () => {
         })
     }
 
+
+
     async function handleApproveSuccess(
         nftAddress: string,
         tokenId: string,
@@ -106,6 +109,36 @@ const SellNft: NextPage = () => {
         })
     }
 
+    async function handleMintSuccess(
+        nftAddress: string,
+        xchaingeAddress: string,
+        tokenId: string,
+        price: string,
+        nftAbi: any
+    ) {
+        console.log("Approving...")
+
+        const options = {
+            abi: nftAbi,
+            contractAddress: nftAddress,
+            functionName: "approve",
+            params: {
+                to: xchaingeAddress,
+                tokenId: tokenId,
+            },
+        }
+
+        await runContractFunction({
+            params: options,
+            onSuccess: () => handleApproveSuccess(nftAddress, tokenId, price),
+            onError: (error) => {
+                console.log(error)
+            },
+        })
+
+
+    }
+
     async function approveAndList(nftAddress: string, tokenId: string, price: string) {
 
 
@@ -130,30 +163,62 @@ const SellNft: NextPage = () => {
     }
 
     async function mintAndList(data: any) {
+
+        if (!fileUploaded || uploadedfile == undefined || uploadedfile == null) {
+            dispatch({
+                type: "error",
+                message: "Please upload a valid image file",
+                title: "Image not uploaded",
+                position: "topR",
+            })
+            return
+        }
+
         // const imgUrl = data.data[0].inputResult
         const tokenId = data.data[0].inputResult
         const productName = data.data[1].inputResult
         const description = data.data[2].inputResult
         const price = (data.data[3].inputResult).toString()
 
-        // console.log("Approving...")
-        // const options = {
-        //     abi: xchaingeTokenAbi,
-        //     contractAddress: data.data[0].inputResult,
-        //     functionName: "approve",
-        //     params: {
-        //         to: xchaingeAddress,
-        //         tokenId: data.data[1].inputResult,
-        //     },
-        // }
+        const NFT_STORAGE_KEY = process.env.NFT_STORAGE_KEY
 
-        // await runContractFunction({
-        //     params: options,
-        //     onSuccess: () => handleApproveSuccess(nftAddress, tokenId, price),
-        //     onError: (error) => {
-        //         console.log(error)
-        //     },
-        // })
+
+        console.log("Uploading.. to IPFS")
+        // console.log(`NFT storage token is ${NFT_STORAGE_KEY}`)
+
+        const ipfsToken = await storeNFT(
+            uploadedfile,
+            productName,
+            tokenId,
+            description,
+            NFT_STORAGE_KEY!
+        )
+        // console.log(ipfsToken)
+        const { ipnft, url, data: metaData } = ipfsToken
+        console.log(`ipfs Url : ${url}`)
+
+
+
+
+        console.log("Minting...")
+        const options = {
+            abi: xchaingeTokenAbi,
+            contractAddress: xchaingeTokenAddress,
+
+            functionName: "safeMint",
+            params: {
+                tokenId: tokenId,
+                uri: url
+            },
+        }
+
+        await runContractFunction({
+            params: options,
+            onSuccess: () => handleMintSuccess(xchaingeTokenAddress, xchaingeAddress, tokenId, price, xchaingeTokenAbi),
+            onError: (error) => {
+                console.log(error)
+            },
+        })
     }
 
     function fileChange(file: Blob | null | undefined) {
@@ -166,10 +231,16 @@ const SellNft: NextPage = () => {
 
     return (
         <div>
-            <Upload
-                onChange={fileChange}
-                theme="withIcon"
-            />
+            <div>
+
+                <h1>Upload Your Product Image</h1>
+
+                <Upload
+                    onChange={fileChange}
+                    theme="withIcon"
+                />
+            </div>
+
             <Form
                 onSubmit={mintAndList}
                 buttonConfig={{
@@ -214,7 +285,7 @@ const SellNft: NextPage = () => {
                         key: "price",
                     },
                 ]}
-                title="List your Asset as NFT!"
+                title="Details of the product"
                 id="Main Form"
             />
             <div className="py-4">
