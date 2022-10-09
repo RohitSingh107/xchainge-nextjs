@@ -1,5 +1,7 @@
 import type { NextPage } from "next"
 import { Form, Button, useNotification } from "web3uikit"
+import { Upload } from "@web3uikit/core"
+
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import xchaingeAbi from "../constants/Xchainge.json"
 import xchaingeTokenAbi from "../constants/XchaingeToken.json"
@@ -16,6 +18,10 @@ type NetworkConfigMap = {
 }
 
 const SellNft: NextPage = () => {
+
+    var fileUploaded = false
+    var uploadedfile: Blob
+
     const { chainId, account, isWeb3Enabled } = useMoralis()
     const chainString = chainId ? parseInt(chainId).toString() : "31337"
     // Should point to correct address
@@ -100,21 +106,17 @@ const SellNft: NextPage = () => {
         })
     }
 
-    async function approveAndList(data: any) {
-        console.log("Approving...")
-        const nftAddress = data.data[0].inputResult
-        const tokenId = data.data[1].inputResult
-        const price = ethers.utils
-            .parseUnits(data.data[2].inputResult, "ether")
-            .toString()
+    async function approveAndList(nftAddress: string, tokenId: string, price: string) {
 
+
+        console.log("Approving...")
         const options = {
             abi: xchaingeTokenAbi,
-            contractAddress: data.data[0].inputResult,
+            contractAddress: nftAddress,
             functionName: "approve",
             params: {
                 to: xchaingeAddress,
-                tokenId: data.data[1].inputResult,
+                tokenId: tokenId,
             },
         }
 
@@ -127,10 +129,49 @@ const SellNft: NextPage = () => {
         })
     }
 
+    async function mintAndList(data: any) {
+        // const imgUrl = data.data[0].inputResult
+        const tokenId = data.data[0].inputResult
+        const productName = data.data[1].inputResult
+        const description = data.data[2].inputResult
+        const price = (data.data[3].inputResult).toString()
+
+        // console.log("Approving...")
+        // const options = {
+        //     abi: xchaingeTokenAbi,
+        //     contractAddress: data.data[0].inputResult,
+        //     functionName: "approve",
+        //     params: {
+        //         to: xchaingeAddress,
+        //         tokenId: data.data[1].inputResult,
+        //     },
+        // }
+
+        // await runContractFunction({
+        //     params: options,
+        //     onSuccess: () => handleApproveSuccess(nftAddress, tokenId, price),
+        //     onError: (error) => {
+        //         console.log(error)
+        //     },
+        // })
+    }
+
+    function fileChange(file: Blob | null | undefined) {
+        console.log("Uploading... Starts")
+        fileUploaded = true
+        uploadedfile = file!
+
+
+    }
+
     return (
         <div>
+            <Upload
+                onChange={fileChange}
+                theme="withIcon"
+            />
             <Form
-                onSubmit={approveAndList}
+                onSubmit={mintAndList}
                 buttonConfig={{
                     isLoading: false,
                     type: "submit",
@@ -138,22 +179,37 @@ const SellNft: NextPage = () => {
                     text: "Sell NFT!",
                 }}
                 data={[
+
                     {
-                        inputWidth: "50%",
                         name: "Product Serial Number",
                         type: "number",
-                        value: "",
-                        key: "nftAddress",
-                    },
-                    {
-                        name: "Description of your product",
-                        type: "text",
+                        validation: {
+                            required: true
+                        },
                         value: "",
                         key: "tokenId",
                     },
                     {
+                        name: "Name of the product",
+                        type: "text",
+                        validation: {
+                            required: true
+                        },
+                        value: "",
+                        key: "productName",
+                    },
+                    {
+                        name: "Description of your product",
+                        type: "textarea",
+                        value: "",
+                        key: "description",
+                    },
+                    {
                         name: "Price (in ETH)",
                         type: "number",
+                        validation: {
+                            required: true
+                        },
                         value: "",
                         key: "price",
                     },
