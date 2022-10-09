@@ -247,7 +247,7 @@ const SellNft: NextPage = () => {
                     isLoading: false,
                     type: "submit",
                     theme: "primary",
-                    text: "Sell NFT!",
+                    text: "List NFT!",
                 }}
                 data={[
 

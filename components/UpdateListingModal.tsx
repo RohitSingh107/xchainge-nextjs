@@ -66,7 +66,7 @@ export const UpdateListingModal = ({
         params: {
             nftAddress: nftAddress,
             tokenId: tokenId,
-            newPrice: ethers.utils.parseEther(priceToUpdateListingWith || "0"),
+            newPrice: (priceToUpdateListingWith || "0"),
         },
     })
 
@@ -111,7 +111,7 @@ export const UpdateListingModal = ({
                             <Illustration height="180px" logo="lazyNft" width="100%" />
                         )}
                         <div className="font-bold">
-                            {ethers.utils.formatEther(currentPrice || 0)} ETH
+                            {currentPrice || 0} MATIC
                         </div>
                     </div>
                     <Input
