@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#container_sellpage {
+  display: "flex";
+  justify-self: center;
+  background-color: #000000;
+}
+

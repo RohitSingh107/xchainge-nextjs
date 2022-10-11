@@ -187,7 +187,7 @@ const NFTBox: NextPage<NFTBoxProps> = ({
                                 />
                                 {price && (
                                     <div className="font-bold">
-                                        {price} MATIC
+                                        {ethers.utils.formatEther(price)} MATIC
                                     </div>
                                 )}
                             </div>
