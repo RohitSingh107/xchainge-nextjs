@@ -8,7 +8,6 @@ import xchaingeTokenAbi from "../constants/XchaingeToken.json"
 import networkMapping from "../constants/networkMapping.json"
 import { useEffect, useState } from "react"
 import { BigNumber, ethers } from "ethers"
-import "../styles/Home.module.css"
 
 type NetworkConfigItem = {
   Xchainge: string[]
@@ -229,7 +228,7 @@ const SellNft: NextPage = () => {
   }
 
   return (
-    <div id="container_sellpage">
+    <div>
       <div>
         <h1>Upload Your Product Image</h1>
 
@@ -241,7 +240,7 @@ const SellNft: NextPage = () => {
         buttonConfig={{
           isLoading: false,
           type: "submit",
-          theme: "primary",
+          theme: "ghost",
           text: "List NFT!",
         }}
         data={[
