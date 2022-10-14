@@ -228,84 +228,93 @@ const SellNft: NextPage = () => {
   }
 
   return (
-    <div>
+    <div className="grid h-screen place-items-center">
       <div>
-        <h1>Upload Your Product Image</h1>
 
-        <Upload onChange={fileChange} theme="withIcon" />
-      </div>
+        <div >
+          <h1 >Upload Your Product Image</h1>
 
-      <Form
-        onSubmit={mintAndList}
-        buttonConfig={{
-          isLoading: false,
-          type: "submit",
-          theme: "ghost",
-          text: "List NFT!",
-        }}
-        data={[
-          {
-            name: "Product Serial Number",
-            type: "number",
-            validation: {
-              required: true,
-            },
-            value: "",
-            key: "tokenId",
-          },
-          {
-            name: "Name of the product",
-            type: "text",
-            validation: {
-              required: true,
-            },
-            value: "",
-            key: "productName",
-          },
-          {
-            name: "Description of your product",
-            type: "textarea",
-            value: "",
-            key: "description",
-          },
-          {
-            name: "Price (in MATIC)",
-            type: "number",
-            validation: {
-              required: true,
-            },
-            value: "",
-            key: "price",
-          },
-        ]}
-        title="Details of the product"
-        id="Main Form"
-      />
-      <div className="py-4">
-        <div className="flex flex-col gap-2 justify-items-start w-fit">
-          <h2 className="text-2xl">
-            Withdraw {ethers.utils.formatUnits(proceeds.toString(), "ether")}{" "}
-            proceeds
-          </h2>
-          {proceeds != "0" ? (
-            <Button
-              id="withdraw-proceeds"
-              onClick={() =>
-                runContractFunction({
-                  params: withDrawOptions,
-                  onSuccess: () => handleWithdrawSuccess,
-                  onError: (error) => console.log(error),
-                })
-              }
-              text="Withdraw"
-              theme="primary"
-              type="button"
-            />
-          ) : (
-            <p>No withdrawable proceeds detected</p>
-          )}
+          <Upload onChange={fileChange} theme="withIcon" />
+        </div>
+
+        <div>
+
+          <Form
+            onSubmit={mintAndList}
+            buttonConfig={{
+              isLoading: false,
+              type: "submit",
+              theme: "ghost",
+              text: "List NFT!",
+            }}
+            data={[
+              {
+                name: "Product Serial Number",
+                type: "number",
+                validation: {
+                  required: true,
+                },
+                value: "",
+                key: "tokenId",
+              },
+              {
+                name: "Name of the product",
+                type: "text",
+                validation: {
+                  required: true,
+                },
+                value: "",
+                key: "productName",
+              },
+              {
+                name: "Description of your product",
+                type: "textarea",
+                value: "",
+                key: "description",
+              },
+              {
+                name: "Price (in MATIC)",
+                type: "number",
+                validation: {
+                  required: true,
+                },
+                value: "",
+                key: "price",
+              },
+            ]}
+            title="Details of the product"
+            id="Main Form"
+          />
+        </div>
+
+
+        <div className="py-4">
+          <div className="flex flex-col gap-2 justify-items-start w-fit">
+            <h2 className="text-2xl">
+              Withdraw {ethers.utils.formatUnits(proceeds.toString(), "ether")}{" "}
+              proceeds
+            </h2>
+            {proceeds != "0" ? (
+              <Button
+                id="withdraw-proceeds"
+                onClick={() =>
+                  runContractFunction({
+                    params: withDrawOptions,
+                    onSuccess: () => handleWithdrawSuccess,
+                    onError: (error) => console.log(error),
+                  })
+                }
+                text="Withdraw"
+                theme="primary"
+                type="button"
+              />
+            ) : (
+              <p>No withdrawable proceeds detected</p>
+            )}
+          </div>
         </div>
       </div>
+
     </div>
   )
 }
